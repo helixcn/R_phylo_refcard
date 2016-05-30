@@ -1,0 +1,777 @@
+% by Tom Short, tshort@epri-peac.com, EPRI PEAC
+% granted to the public domain
+\documentclass[10pt,landscape]{article}
+%\documentclass[10pt,portrait]{article}
+\usepackage{pslatex}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{color}
+\usepackage{CJKutf8}
+\usepackage{hyperref}
+
+% Turn off header and footer
+\pagestyle{empty}
+
+%\setlength{\leftmargin}{0.75in}
+\setlength{\oddsidemargin}{-0.75in}
+\setlength{\evensidemargin}{-0.75in}
+\setlength{\textwidth}{10.5in}
+\setlength{\topmargin}{-0.2in}
+\setlength{\textheight}{7.4in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+
+\pdfpageheight\paperheight
+\pdfpagewidth\paperwidth
+
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{0mm}%
+                                     {-24pt}% \@plus -12pt \@minus -6pt}%
+                                     {0.5ex}%
+                                {\color{blue}\normalfont\large\bfseries}}
+\makeatother
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+\newcommand{\code}{\texttt}
+\newcommand{\bcode}[1]{\texttt{\textbf{#1}}}
+\newcommand\F{\code{FALSE}}
+\newcommand\T{\code{TRUE}}
+
+%\newcommand{\hangpara}[2]{\hangindent#1\hangafter#2\noindent}
+%\newenvironment{hangparas}[2]{\setlength{\parindent}{\z@}\everypar={\hangpara{#1}{#2}}}
+
+\newcommand{\describe}[1]{\begin{description}{#1}\end{description}}
+
+% -----------------------------------------------------------------------
+
+\begin{document}
+\begin{CJK}{UTF8}{gbsn}
+%\raggedright
+\footnotesize
+\begin{multicols}{3}
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+     \Large{\textbf{\color{blue}R系统发育比较分析快速参考 V1.0.1}} \\
+\end{center}
+
+\begin{center} 
+     {\today{}}\\
+\end{center}
+
+香港嘉道理农场暨植物园植物保育部\\
+
+张金龙 编\\
+\textbf{Email}: \href{mailto:jinlongzhang01@gmail.com}{jinlongzhang01@gmail.com}
+
+\section{常用程序包}
+\everypar={\hangindent=9mm}
+\textbf{CRAN Task View: Environmetrics }\\
+\href{https://cran.r-project.org/web/views/Environmetrics.html}{
+https://cran.r-project.org/web/views/Environmetrics.html
+}
+
+\textbf{CRAN Task View: Phylogenetics }\\
+\href{https://cran.r-project.org/web/views/Phylogenetics.html}{
+https://cran.r-project.org/web/views/Phylogenetics.html
+}
+
+\bcode{adephylo       } exploratory analyses for the phylogenetic comparative method
+
+\bcode{adhoc          } calculate ad hoc distance thresholds for DNA barcoding identification， DNA条形码分辨率分析
+
+\bcode{ape            } Analyses of Phylogenetics and Evolution， 是系统发育比较分析的核心程序包. provides functions for reading and manipulating phylogenetic trees and DNA sequences, computing DNA distances, estimating trees with distance-based methods, and a range of methods for comparative analyses and analysis of diversification. Functionalities are also provided for programming new phylogenetic methods.
+
+\bcode{apex           } Phylogenetic Methods for Multiple Gene Data, DNA的操作
+
+\bcode{apTreeshape    } simulation and analysis of phylogenetic tree topologies using statistical indices 
+
+\bcode{BAMMtools      } Analysis and Visualization of Macroevolutionary Dynamics on Phylogenetic Trees， 结合BAMM软件， 对进化速率进行分析
+
+\bcode{bayou          } Bayesian Fitting of Ornstein-Uhlenbeck Models to Phylogenies, 用贝叶斯方法推断性状进化速率。 
+
+\bcode{betapart       } Partitioning beta diversity into turnover and nestedness components， Beta多样性分解 
+
+\bcode{BioGeoBEARS    } BioGeography with Bayesian (and Likelihood) Evolutionary Analysis in R Scripts， 推断祖先性状
+
+\bcode{BoSSA          } Sort sequence from genbank. Retrieve sequence information from genbank (designed for viruses sequences and retrieve information such as isolation date and host). BLAST sequence and accession numbers. Detect group of sequences presenting phylogeography signal. Read PDB file (protein 3D structure file)。DNA序列操作以及检索等。目前没人维护。
+
+\bcode{caper          } Comparative Analyses of Phylogenetics and Evolution in R， 作者包括系统发育比较分析的大专家。计算系统发育多样性PD， 系统发育信号， PGLS( Phylogenetic generalized linear models) ， Tree imbalance, Phylogenetic Independent comparative methods.
+
+\bcode{cati           } Detect and quantify community assembly processes using trait values of individuals or populations, the T-statistics and other metrics, and dedicated null models。该程序包在个体水平，利用功能多样性等信息推断群落物种组成机制。 
+
+\bcode{convevol       } Quantifies and assesses the significance of convergent evolution， 性状趋同进化分析，并有一些操作进化树的函数。
+
+\bcode{corHMM         } Analysis of Binary Character Evolution. Fits a hidden rates model that allows different transition rate classes on different portions of a phylogeny by treating rate classes as hidden states in a Markov process and various other functions for evaluating models of binary character evolution. 基于马尔科夫过程进行二元性状进化分析。 
+
+\bcode{DAMOCLES       } Dynamic Assembly Model of Colonization, Local Extinction and Speciation. Simulates and computes (maximum) likelihood of a dynamical model of community assembly that takes into account phylogenetic history. 利用极大似然和贝叶斯方法推断物种定植以及分化和灭绝的过程。 
+
+\bcode{DDD            } Diversity-Dependent Diversification： Implements maximum likelihood methods based on the diversity-dependent birth-death process to test whether speciation or extinction are diversity-dependent. 用极大似然法拟合考虑到物种丰富度制约的物种分化速率模型
+
+\bcode{dendextend     } Extending R's Dendrogram Functionality. Adjust a tree's graphical parameters - the color, size, type, etc of its branches, nodes and labels. (2) Visually and statistically compare different dendrograms to one another. 绘制进化树, 以及对树状图进行调整。 
+
+\bcode{DiscML         } performs rate estimation using maximum likelihood with the options to correct for unobservable data, to implement a Gamma-distribution for rate variation, and to estimate the prior root probabilities from the empirical data. 考虑到缺失数据的物种分化速率模型。 
+
+\bcode{distory        } Geodesic distance between phylogenetic trees and associated functions. 度量进化树之间的距离。
+
+\bcode{diversitree    } Comparative Phylogenetic Analyses of Diversification. Contains a number of comparative phylogenetic methods, mostly focusing on analysing diversification and character evolution. Contains implementations of 'BiSSE' (Binary State Speciation and Extinction) and its unresolved tree extensions, 'MuSSE' (Multiple State Speciation and Extinction), 'QuaSSE', 'GeoSSE', and 'BiSSE-ness' Other included methods include Markov models of discrete and continuous trait evolution and constant rate speciation and extinction. 主要进行性状进化模拟。
+
+\bcode{evobiR         } Comparative analysis of continuous traits influencing discrete states, and utility tools to facilitate comparative analyses. Implementations of ABBA/BABA type statistics to test for introgression in genomic data. Wright-Fisher, phylogenetic tree, and statistical distribution Shiny interactive simulations for use in teaching.
+
+\bcode{expands        } Expanding Ploidy and Allele-Frequency on Nested Subpopulations。 肿瘤遗传学。 
+
+\bcode{expoTree       } Calculate density dependent likelihood of a phylogenetic tree. Source code partly adapted from MATLAB code by Awad H. Al-Mohy and using the routines DLNAC1 and DLARPC by Sheung Hun Cheng, and DLAPST from ScaLAPACK.
+
+\bcode{geiger         } Analysis of Evolutionary Diversification, including MEDUSA: modeling evolutionary diversification using stepwise AIC
+
+\bcode{GUniFrac       } Generalized UniFrac distance for comparing microbial communities. Permutational multivariate analysis of variance using multiple distance matrices.
+
+\bcode{HyPhy          } Macroevolutionary phylogentic analysis of species trees and gene trees. Analysis of species tree branching times and simulation of species trees under a number of different time variable birth-death processes.
+
+\bcode{ips            } Interfaces to Phylogenetic Software in R. This package provides functions that wrap popular phylogenetic software for sequence alignment, masking of sequence alignments, and estimation of phylogenies and ancestral character states. 本软件提供序列比对，建立进化树以及祖先状态重建软件的接口。 
+
+\bcode{iteRates       } Iterates through a phylogenetic tree to identify regions of rate variation using the parametric rate comparison test. 参数法估计进化树中的分化速率变化。 
+
+\bcode{jaatha         } Simulation-Based Maximum Likelihood Parameter Estimation. An estimation method that can use computer simulations to approximate maximum-likelihood estimates even when the likelihood function can not be evaluated directly. It can be applied whenever it is feasible to conduct many simulations, but works best when the data is approximately Poisson distributed, originally designed for demographic inference in evolutionary biology. 基于极大似然法进行参数估计，原来用于群体动态估计，尤其适用于泊松分布 。 
+
+\bcode{kdetrees       } A non-parametric method for identifying potential outlying observations in a collection of phylogenetic trees based on the methods of Owen and Provan (2011). 用Owen and Provan（2011）提出的非参数方法检验进化树的一致性。
+
+\bcode{markophylo     } Markov Chain Models for Phylogenetic Trees. Allows for fitting of maximum likelihood models using Markov chains on phylogenetic trees for analysis of discrete character data. Examples of such discrete character data include restriction sites, gene family presence/absence, intron presence/absence, and gene family size data. 利用马尔科夫链对进化树以及离散数据进行极大似然参数估计。 
+
+\bcode{MCMCglmm       } MCMCglmm: MCMC Generalised Linear Mixed Models， 可用于遗传学和进化分析中。 
+
+\bcode{metafor        } Meta-Analysis Package for R， 整合分析。
+
+\bcode{MPSEM          } Modeling Phylogenetic Signals using Eigenvector Maps, 整合进化分析。
+
+\bcode{mvMORPH        } Multivariate Comparative Tools for Fitting Evolutionary Models (Brownian Motion, Early Burst, ACDC, Ornstein-Uhlenbeck and Shifts) to Morphometric Data. mvBM 函数用来拟合不同的模型， LRT, AIC等检验可以用来选择模型。 
+
+\bcode{mvSLOUCH       } Multivariate Stochastic Linear Ornstein-Uhlenbeck Models for Phylogenetic Comparative Hypotheses, 多变量Ornstein-Uhlenbeck模型。
+
+\bcode{ouch           } Fit and compare Ornstein-Uhlenbeck models for evolution along a phylogenetic tree. 拟合布朗运动模型和OU模型
+
+\bcode{OUwie          } Analysis of Evolutionary Rates in an OU Framework. Calculates and compares rate differences of continuous character evolution under Brownian motion and a new set of Ornstein-Uhlenbeck-based Hansen models that allow the strength of selection and stochastic motion to vary across selective regimes. 基于OU模型的框架， 进行参数估计。 
+
+\bcode{paleotree      } Paleontological and Phylogenetic Analyses of Evolution.主要用于古生物学上的物种分化速率分析。 
+
+\bcode{paleoTS        } paleoTS: Analyze Paleontological Time-Series. Facilitates analysis of paleontological sequences of trait values from an evolving lineage. Functions are provided to fit, using maximum likelihood, evolutionary models including unbiased random walks, directional evolution, stasis, Ornstein-Uhlenbeck, punctuated change, and evolutionary models in which traits track some measured covariate. 古生物学中， 基于进化树的分化速率分析。
+
+\bcode{pastis         } A pre-processor for mrBayes that assimilates sequences, taxonomic information and tree constraints as per xxx.  对即将用MrBayes建立进化树的序列进行预处理， 并生成控制类群位置的MrBayes所需的文件， 以防止某些分类单元在进化树位置上位置不准确。  
+
+\bcode{PBD            } Protracted Birth-Death Model of Diversification. Conducts maximum likelihood analysis and simulation of the protracted speciation model. 基于持久生灭过程用极大似然法拟合物种分化速率。
+
+\bcode{PCPS           } Set of functions for analysis of Principal Coordinates of Phylogenetic Structure (PCPS). 
+
+\bcode{pegas          } Population and Evolutionary Genetics Analysis System. Functions for reading, writing, plotting, analysing, and manipulating allelic and haplotypic data, and for the analysis of population nucleotide sequences and micro-satellites including coalescence analyses. 群体遗传学为主的程序包
+
+\bcode{phangorn       } Phylogenetic analysis in R: Estimation of phylogenetic trees and networks using Maximum Likelihood, Maximum Parsimony, distance methods and Hadamard conjugation. 用极大似然， 最大简约， 距离法，建立进化树和进化网络。
+
+\bcode{phyclust       } Phylogenetic Clustering. Provides a convenient implementation of phyloclustering for DNA and SNP data, capable of clustering individuals into subpopulations and identifying molecular sequences representative of those subpopulations. 
+
+\bcode{phylobase      } Base Package for Phylogenetic Structures and Comparative Data. Provides a base S4 class for comparative methods, incorporating one or more trees and trait data. 关于phylo4的定义， 参见该程序包的说明。 
+
+\bcode{phyloclim      } Integrating Phylogenetics and Climatic Niche Modeling. 整合Maxent， 进行气候适应性的进化分析
+
+\bcode{PHYLOGR        } Functions for Phylogenetically Based Statistical Analyses， Manipulation and analysis of phylogenetically simulated data sets and phylogenetically based analyses using GLS.
+
+\bcode{phyloland      } Modelling Competitive Exclusion and Limited Dispersal in a Statistical Phylogeographic Framework
+
+\bcode{phylolm        } Phylogenetic Linear Regression， including functions for fitting phylogenetic linear models and phylogenetic generalized linear models. 
+
+\bcode{PhyloMeasures  } Fast and Exact Algorithms for Computing Phylogenetic Biodiversity Measures, 快速计算Phylogenetic Diversity， 如 the net relatedness index (NRI), nearest taxon index (NTI), phylogenetic diversity index (PDI)。 
+
+\bcode{phylosignal    } Exploring the Phylogenetic Signal in Continuous Traits. A collection of tools to explore the phylogenetic signal in univariate and multivariate data. Blomberg’s K and K*, Abouheif’s C mean, Moran’s I, and Pagel’s Lambda)
+
+\bcode{phylometrics   } Estimating Statistical Errors of Phylogenetic Metrics， 系统发育分析中考虑到误差。
+
+\bcode{phyloTop       } Tools for calculating and viewing topological properties of phylogenetic trees. 计算进化树拓朴结构的相应指数， 并绘图。 
+
+\bcode{phyreg         } Implements the Phylogenetic Regression of Grafen (1989). Provides general linear model facilities (single y-variable, multiple x-variables with arbitrary mixture of continuous and categorical and arbitrary interactions) for cross-species data.
+
+\bcode{phylotools     } Phylogenetic tools for Eco-phylogenetics。 处理DNA条形码数据， 建立supermatrix， 以及结合Phylocom进行计算。 
+
+\bcode{PhySortR       } A Fast, Flexible Tool for Sorting Phylogenetic Trees. Screens and sorts phylogenetic trees in both traditional and extended Newick format. Allows for the fast and flexible screening (within a tree) of Exclusive clades that comprise only the target taxa and/or Non- Exclusive clades that includes a defined portion of non-target taxa. 进化树的操作以及绘图。
+
+\bcode{phytools       }  Phylogenetic Tools for Comparative Biology (and Other Things). 该程序包是系统发育比较分析的重要贡献， 包括以下函数
+
+\bcode{picante        } 群落系统发育， 系统发育信号， 系统发育多样性以及群落零模型等。
+
+\bcode{pmc            } Monte Carlo based model choice for applied phylogenetics of continuous traits. 基于蒙特卡洛方法，对连续性状进化格局的模型选择。 
+
+\bcode{PVR            } Computes phylogenetic eigenvectors regression (PVR) and phylogenetic signal-representation curve (PSR) (with null and Brownian expectations)
+
+\bcode{RADami         } R Package for Phylogenetic Analysis of RADseq Data. Implements import, export, manipulation, visualization, and downstream (post-clustering) analysis of RADseq data, integrating with the pyRAD package
+
+\bcode{rdryad         } Interface to the Dryad Solr API, their OAI-PMH service, and fetch datasets.
+
+\bcode{Reol           } R interface to the Encyclopedia of Life
+
+\bcode{rncl           } An Interface to the Nexus Class Library
+
+\bcode{RNeXML         } Semantically Rich I/O for the 'NeXML' Format
+
+\bcode{rphast         } Interface to PHAST Software for Comparative Genomics， PHAST程序的接口
+
+\bcode{Rphylip        } An R interface for PHYLIP
+
+\bcode{Rphylopars     } Interface to PHAST Software for Comparative Genomics
+
+\bcode{SigTree        } Identify and Visualize Significantly Responsive Branches in a Phylogenetic Tree
+
+\bcode{spider         } Species Identity and Evolution in R， A package for the analysis of species limits and DNA barcoding data
+
+\bcode{strap          }     Stratigraphic Tree Analysis for Palaeontology
+
+\bcode{surface        }     Fitting Hansen Models to Investigate Convergent Evolution
+
+\bcode{SYNCSA         }  Analysis of functional and phylogenetic patterns in metacommunities. Analysis of metacommunities based on functional traits and phylogeny of the community components.
+
+\bcode{taxize         } Taxonomic Information from Around the Web
+
+\bcode{Taxonstand     } Taxonomic Standardization of Plant Species Names
+
+\bcode{TESS           }     Diversification Rate Estimation and Fast Simulation of Reconstructed Phylogenetic Trees under Tree-Wide Time-Heterogeneous Birth-Death Processes Including Mass-Extinction Events
+
+\bcode{treebase       } Discovery, Access and Manipulation of 'TreeBASE' Phylogenies
+
+\bcode{TreePar        } Estimating birth and death rates based on phylogenies
+
+\bcode{TreeSim        }     Simulating Phylogenetic Trees
+
+\bcode{TreeSimGM      }Simulating Phylogenetic Trees under a General Model
+
+\bcode{vegan          }
+
+
+\section{ape程序包的常用命令}
+\everypar={\hangindent=9mm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{进化树读取和基本操作}
+\everypar={\hangindent=9mm}
+
+\bcode{read.caic         }   Read Tree File in CAIC Format
+
+\bcode{read.dna          }   Read DNA Sequences in a File
+
+\bcode{read.FASTA        }   Read DNA Sequences in a File
+
+\bcode{read.GenBank      }   Read DNA Sequences from GenBank via Internet 从genbank读取数据
+
+\bcode{read.nexus        }   Read Tree File in Nexus Format
+
+\bcode{read.nexus.data   }   Read Character Data In NEXUS Format
+
+\bcode{read.tree         }   读取newick格式的进化树
+
+\bcode{add.scale.bar} 为进化树增加比例尺
+
+\bcode{axisPhylo    } 为进化树图的某一边增加刻度
+
+\bcode{write.dna }  Write DNA Sequences in a File
+
+\bcode{write.nexus} Write Tree File in Nexus Format
+
+\bcode{write.nexus.data}    Write Character Data in NEXUS Format
+
+\bcode{write.tree} 保存Newick格式的进化树
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{进化树数据结构的转换}
+\everypar={\hangindent=9mm}
+
+\bcode{ladderize} 将进化树按照节点位置或分化时间排序
+
+\bcode{as.phylo}  将 'hclust'，'phylog'类型转换为phylo
+
+\bcode{balance} 进化树的平衡性
+
+\bcode{drop.tip} 从进化树中删除某分类单元
+
+\bcode{extract.clade} 保留某一节点下的分类单元
+
+\bcode{di2multi} 将二分枝树转换为多分枝进化树（去掉某一枝长以下的距离）
+
+\bcode{multi2di} 多分枝结构转换为二分枝结构（对多分枝结构随机拟合一个很小的枝长）
+
+\bcode{dist.dna} 求比对好的DNA之间的遗传距离
+
+\bcode{cophenetic} 计算分类单元之间的距离
+
+\bcode{getMRCA} 寻找两个或者多个分类单元的共同祖先
+
+\bcode{howmanytrees} 进化树的数量
+
+\bcode{root} reroots a phylogenetic tree with respect to the specified outgroup or at the node specified in node. 设置外类群， 可以指出某分类单元， 或者节点。
+
+\bcode{unroot} unroots a phylogenetic tree, or returns it unchanged if it is already unrooted. 去掉有根树的根
+
+\bcode{is.rooted} tests whether a tree is rooted. 
+
+\bcode{label2table} 将学名分成科属种
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{物种分化速率以及LTT图}
+\everypar={\hangindent=9mm}
+
+\bcode{bd.ext} 分化速率模型拟合
+
+\bcode{bd.time} 用最小二乘法拟合Time-Dependent Birth-Death Models（Paradis 2011）
+
+\bcode{binaryPGLMM} Phylogenetic Generalized Linear Mixed Model for Binary Data
+
+\bcode{ltt.plot} plotting the numbers of lineages through time from phylogenetic trees 分类单元数-时间图 
+
+\bcode{mltt.plot} 多个分类单元数-时间图 
+
+\bcode{LTT} Theoretical Lineage-Through Time Plots, 理论预测的分类单元数-时间图
+
+\bcode{birthdeath} Estimation of Speciation and Extinction Rates With Birth-Death Models
+
+\bcode{yule.time} Fits the Time-Dependent Yule Model
+
+\bcode{branching.times}This function computes the branching times of a phylogenetic tree, that is the distance from each node to the tips, under the assumption that the tree is ultrametric. 分支的时间。 
+
+\bcode{diversi.gof} computes two tests of the distribution of branching times using the Cramér–von Mises and Anderson–Darling goodness-of-fit tests
+
+\bcode{gammaStat}Gamma-Statistic of Pybus and Harvey 表示分化时间早晚的Gamma指数
+
+\bcode{mcconwaysims.test} Null Hypothesis: a trait or variable does not affect diversification rate.
+
+\bcode{slowinskiguyer.test} Null Hypothesis: a trait or variable does not increase diversification rate
+
+\bcode{yule}    Fits the Yule Model to a Phylogenetic Tree 物种分化时间对Yule过程的拟合
+
+\bcode{yule.cov}    Fits the Yule Model With Covariates， 考虑协方差矩阵的物种分化时间Yule过程拟合
+
+\bcode{yule.time}   Fits the Time-Dependent Yule Model， 时间依赖的Yule过程拟合
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{建立进化树}
+\everypar={\hangindent=9mm}
+
+\bcode{bionj} Tree Estimation Based on an Improved Version of the NJ Algorithm
+
+\bcode{bionjs} Tree Reconstruction from Incomplete Distances With NJ* or bio-NJ*
+
+\bcode{evonet} 建立进化网络
+
+\bcode{FastME} 用最小进化法建立进化树 Tree Estimation Based on the Minimum Evolution Algorithm
+
+\bcode{nj} Neighbor-Joining Tree Estimation 邻位法建立进化树
+
+\bcode{phymltest} 与phyml配合， 进行碱基替换模型筛选
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{其他多元统计}
+\everypar={\hangindent=9mm}
+
+\bcode{(pcoa)} Principle Coordinate Analysis 主坐标分析
+
+\bcode{CADM.global} 距离矩阵一致性检验
+
+\bcode{image.DNAbin}  DNA数据绘图
+
+\bcode{mantel.test} 对距离矩阵进行相关性分析，并进行随机化检验
+
+\bcode{mst} Minimum spanning tree
+
+\bcode{Moran.I} computes Moran's I autocorrelation coefficient of x giving a matrix of weights using the method described by Gittleman and Kot (1990) 自相关分析
+
+\bcode{pic} Phylogenetically Independent Contrasts
+
+\bcode{pic.ortho} Computes the orthonormal contrasts using the method described by Felsenstein (2008), Felsenstein 2008年提出的新方法。
+
+\bcode{plot.correlogram} 距离矩阵展开图
+
+\bcode{vcv} computes the expected variances and covariances of a continuous trait assuming it evolves under a given model.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{分子钟}
+\everypar={\hangindent=9mm}
+
+\bcode{chronoMPL }   Molecular Dating With Mean Path Lengths
+
+\bcode{chronopl}     Molecular Dating With Penalized Likelihood
+
+\bcode{chronos}  Molecular Dating by Penalised Likelihood and Maximum Likelihood
+
+\bcode{chronos.control}  Molecular Dating by Penalised Likelihood and Maximum Likelihood
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{序列比对}
+\everypar={\hangindent=9mm}
+
+\bcode{clustal} 结合其他外部程序序列比对
+
+\bcode{consensus}    Concensus Trees 获得一致性树
+
+\bcode{boot.phylo}  在NJ等方法建立进化树时， 利用Bootstrap评估支持率
+
+\bcode{muscle} 结合muscle软件进行比对
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{绘制进化树}
+\everypar={\hangindent=9mm}
+
+\bcode{nodelabels} 绘制进化树时为节点添加文字
+
+\bcode{tiplabels} 绘制进化树时， 为进化树末端添加文字
+
+\bcode{edgelabels} 绘制进化树时， 为枝长添加说明
+
+\bcode{nodelabels} 绘制进化树时， 为节点添加文字
+
+\bcode{base.freq} DNA碱基频率
+
+\bcode{GC.content} GC碱基比例
+
+\bcode{Ftab} the contingency table with the absolute frequencies of the DNA bases from a pair of sequences.
+
+\bcode{mixedFontLabel} 分类单元标签使用混合字体
+
+\bcode{phydataplot} 在进化树右侧绘图， 如柱状图
+
+\bcode{ring} 对扇形进化树，在进化树外围绘图
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{进化树模拟}
+\everypar={\hangindent=9mm}
+
+\bcode{rtree} generates general trees 生成一般随机树
+
+\bcode{rmtree} 该函数递归得调用rtree函数
+
+\bcode{rcoal} generates coalescent trees 生成溯祖随机进化树
+
+\bcode{rlineage} generates a complete tree including the species going extinct before present; 生成包含已灭绝类群的进化树
+
+\bcode{rbdtree} generates a tree with only the species living at present (thus the tree is ultrametric); 生成只有现存种的进化树
+
+\bcode{rphylo} generates a tree with a fixed number of species at present time. 生成分类单元数一定的进化树
+
+\bcode{drop.fossil} is a utility function to remove the extinct species. 删除已灭绝类群
+
+\bcode{rTraitCont}  Continuous Character Simulation 模拟连续性状
+
+\bcode{rTraitDisc}  Discrete Character Simulation 模拟离散性状
+
+\bcode{rTraitMult}  Multivariate Character Simulation 多个性状模拟
+
+\bcode{stree} 生成规则树
+
+\bcode{subtreeplot } Zoom on a Portion of a Phylogeny by Successive Clicks 在左侧进化树选取一个节点， 右侧显示节点下的分类单元
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{重建祖先状态}
+\everypar={\hangindent=9mm}
+
+\bcode{ace} 重建祖先状态
+
+\bcode{anova.ace} 重建祖先状态
+
+\bcode{MPR} 用最大简约法重建祖先状态
+
+\bcode{all.equal.phylo} 比较进化树
+
+\section{其他重要程序包}
+\everypar={\hangindent=9mm}
+
+\section{Diversitree}
+\everypar={\hangindent=9mm}
+
+\bcode{trait.plot} 绘制性状分布扇形图
+
+\bcode{plot.history} 绘制性状进化的历史
+
+\bcode{make.asr.joint}  Ancestral State Reconstruction
+
+\bcode{make.asr.marginal }  Ancestral State Reconstruction
+
+\bcode{make.asr.stoch } Ancestral State Reconstruction
+
+\bcode{make.bm} Brownian Motion (BM)
+
+\bcode{make.ou} Ornstein-Uhlenbeck (OU)
+
+\bcode{make.eb }Early Burst (EB) character evolution
+
+\bcode{make.lambda} BM on a “lambda” rescaled tree
+
+\bcode{make.mk2} Mk2 Models of character evolution
+
+\bcode{make.mkn} Mk-n Models of character evolution
+
+\bcode{make.quasse} Quantitative State Speciation and Extinction Model
+
+\bcode{make.musse} MuSSE: Multi-State Speciation and Extinction
+
+\begin{itemize}
+\item BiSSE (Binary State Speciation and Extinction)
+\item MuSSE (Multi-State Speciation and Extinction)
+\item BiSSE-ness (BiSSE-node enhanced state shift)
+\item ClaSSE (Cladogenetic State change Speciation and Extinction)
+\item GeoSSE (Geographic State Speciation and Extinction) model, 
+\item yule a simple character independent birth-death model
+\end{itemize}
+
+%%%%%%%%%%%%%%% v#################
+Models (from the help of fitContinuous in geiger)
+\begin{itemize}
+
+\item BM is the Brownian motion model (Felsenstein 1973), which assumes the correlation structure among trait values is proportional to the extent of shared ancestry for pairs of species. Default bounds on the rate parameter are sigsq=c(min=exp(-500),max=exp(100)). The same bounds are applied to all other models, which also estimate sigsq
+
+\item OU is the Ornstein-Uhlenbeck model (Butler and King 2004), which fits a random walk with a central tendency with an attraction strength proportional to the parameter alpha. The OU model is called the hansen model in ouch, although the way the parameters are fit is slightly different here. Default bounds are alpha = c(min = exp(-500), max = exp(1))
+
+\item EB is the Early-burst model (Harmon et al. 2010) and also called the ACDC model (accelerating-decelerating; Blomberg et al. 2003). Set by the a rate parameter, EB fits a model where the rate of evolution increases or decreases exponentially through time, under the model r[t] = r[0] * exp(a * t), where r[0] is the initial rate, a is the rate change parameter, and t is time. The maximum bound is set to -0.000001, representing a decelerating rate of evolution. The minimum bound is set to log(10\^-5)/depth of the tree.
+
+\item trend is a diffusion model with linear trend in rates through time (toward larger or smaller rates). Default bounds are slope = c(min = -100, max = 100)
+
+\item lambda is one of the Pagel (1999) models that fits the extent to which the phylogeny predicts covariance among trait values for species. The model effectively transforms the tree: values of lambda near 0 cause the phylogeny to become more star-like, and a lambda value of 1 recovers the BM model. Default bounds are lambda = c(min = exp(-500), max = 1
+
+\item kappa is a punctuational (speciational) model of trait evolution (Pagel 1999), where character divergence is related to the number of speciation events between two species. Note that if there are speciation events that are missing from the given phylogeny (due to extinction or incomplete sampling), interpretation under the kappa model may be difficult. Considered as a tree transformation, the model raises all branch lengths to an estimated power (kappa). Default bounds are kappa = c(min = exp(-500), max = 1)
+
+\item delta is a time-dependent model of trait evolution (Pagel 1999). The delta model is similar to ACDC insofar as the delta model fits the relative contributions of early versus late evolution in the tree to the covariance of species trait values. Where delta is greater than 1, recent evolution has been relatively fast; if delta is less than 1, recent evolution has been comparatively slow. Intrepreted as a tree transformation, the model raises all node depths to an estimated power (delta). Default bounds are delta = c(min = exp(-500), max = 3)
+
+\item drift is a model of trait evolution with a directional drift component (i.e., a trend toward smaller or larger values). This model is sensible only for non-ultrametric trees, as the likelihood surface is entirely flat with respect to the slope of the trend if the tree is ultrametric. Default bounds are drift = c(min = -100, max = 100)
+
+\item white is a white-noise (non-phylogenetic) model, which assumes data come from a single normal distribution with no covariance structure among species. The variance parameter sigsq takes the same bounds defined under the BM model
+
+\end{itemize}
+
+\section{geiger}
+\everypar={\hangindent=9mm}
+
+\bcode{aov.phylo} phylogenetic anova
+
+\bcode{bd.ms} uses the Magallon and Sanderson (2000) method to calculate net diversification rate for a clade given extant diversity and age. 
+
+\bcode{bd.km} computes the Kendall-Moran estimate of speciation rate, which assumes a complete phylogenetic tree.
+
+\bcode{disparity} Diversity vs disparity and the evolution of modern cetaceans
+
+\bcode{disparity} calculating disparity-through-time for a phylogenetic tree and phenotypic data
+
+\bcode{dtt} plotting disparity-through-time for a phylogenetic tree and phenotypic data
+
+\bcode{itContinuousMCMC} 连续性状模型的MCMC参数估计
+
+\bcode{fitContinuous} 连续性状的ML参数估计
+
+\bcode{fitDiscrete} 离散数据的ML参数估计
+
+\bcode{gbresolve} 获取分类单元在Genebank的分类位置
+
+\bcode{gbcontain} 获取分类单元在Genebank的分类位置
+
+\bcode{mecca} Runs MECCA's hybrid ABC-MCMC algorithm to jointly estimate diversification rates and trait evolution from incompletely sampled comparative data
+
+\bcode{medusa} MEDUSA: modeling evolutionary diversification using stepwise AIC. Fits piecewise birth-death models to ultrametric phylogenetic tree(s) according to phylogenetic (edge-length) and taxonomic (richness) likelihoods.
+
+The algorithm of MEDUSA first fits a single diversification model to the entire dataset. A series of single breakpoints in the diversification process is then added, so that different parts of the tree evolve with different parameter values (per-lineage net diversification–r and relative extinction rates–epsilon). Initial values for these diversification parameters are given through the init argument and may need to be tailored for particular datasets. The algorithm compares all single-breakpoint models to the initial model, and retains the best breakpoint. Then all possible two-breakpoint models are compared with the best single-breakpoint model, and so on. Breakpoints may be considered at a "node", a "stem" branch, or both (as dictated by the cut argument). Birth-death or pure-birth (Yule) processes (or a combination of these processes) may be considered by the MEDUSA algorithm. The model flavor is determined through the model argument.
+
+\bcode{nh.test} The Freckleton and Harvey node-height test. Fits a linear model between the absolute magnitude of the standardized independent contrasts and the height above the root of the node at which they were being compared to identify early bursts of trait evolution.
+
+\bcode{nodelabel.phylo} 绘制进化树的补充函数
+
+\bcode{phylo.lookup} converts a taxonomy into a phylogenetic tree.
+
+\bcode{lookup.phylo}  converts a phylogenetic tree (phy) into a linkage table based on nodelabels associated with phy, which can be supplemented with a taxonomy and (or) clades object.
+
+\bcode{rc} conducting the relative cladogenesis test for all slices through a tree
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{apTreeshape}
+\everypar={\hangindent=9mm}
+
+\bcode{aldous.test} A graphical test to decide if tree data fit the Yule or the PDA models
+
+\bcode{colless} colless computes the Colless' index of a tree and provides standardized values according to the Yule and PDA models.
+
+\bcode{colless.test} performs a test based on the Colless' index on tree data for the Yule or PDA model hypothesis. 
+
+\bcode{sackin.test} does the same with the Sackin's index. 
+
+\bcode{likelihood.test } likelihood.test uses the function shape.statistic to test the Yule model against the PDA model. The test is based on a Gaussian approximation for the log-ratio of likelihoods.
+
+\section{BAMMtools}
+\everypar={\hangindent=9mm}
+
+\bcode{traitDependentBAMM} STRAPP: STructured Rate Permutations on Phylogenies
+
+\section{caper}
+\everypar={\hangindent=9mm}
+
+\bcode{pd.calc} 计算Phylogenetic Diversity, 方法如下
+
+\begin{itemize}
+\item Total Branch Length (TBL) The sum of all the edge lengths in the subtree given by the tip subset. This measure can be partitioned into the two next measures.
+
+\item Shared Branch Length (SBL) The sum of all edges in the subtree that are shared by more than one tip.
+
+\item Unique Evolutionary History (UEH) The sum of the edge lengths that give rise to only one tip in the subtree.
+
+\item Length of tip branch lengths (TIPS) Length of tip branch lengths (TIPS)
+\end{itemize}
+
+\everypar={\hangindent=9mm}
+\bcode{pd.bootstrap} 对Phylogenetic Diversity 进行Bootstrap
+
+\bcode{ed.calc)}  计算Evolutionary Distinctiveness
+
+\bcode{pgls} Phylogenetic generalized linear models: Fits a linear model, taking into account phylogenetic non-independence between data points. The strength and type of the phylogenetic signal in the data matrix can also be accounted for by adjusting branch length transformations (lambda, delta and kappa). These transformations can also be optimised to find the maximum likelihood transformation given the data and the model.
+
+\bcode{phylo.d} Calculates the D value, a measure of phylogenetic signal in a binary trait, and tests the estimated D value for significant departure from both random association and the clumping expected under a Brownian evolution threshold model.
+
+\bcode{classification} 获取分类位置
+
+\bcode{tax\_name} 获取科名
+
+\bcode{downstream} 分类单元下某一等级的分类单元名称
+
+\bcode{upstream} 分类单元上的某一等级名称
+
+\section{taxize}
+\everypar={\hangindent=9mm}
+
+\bcode{sci2comm} 从学名获得俗名
+
+\bcode{comm2sci} 从俗名获取学名
+
+\bcode{children} 寻找下属分类单元
+
+\bcode{gbif\_parse} 学名划分为科属种
+
+\bcode{gni\_parse} 学名划分为科属种
+
+
+\begin{itemize}
+\item COL: Catalogue of Life
+\item NCBI: National Center for Biotechnology Information
+\item ITIS: Integrated Taxonomic Information Service
+\item EOL: Encylopedia of Life
+\item GBIF: Global Biodiversity Information Facility
+\item NBN: National Biodiversity Network (UK)
+\item iPlant: iPlant Name Resolution Service
+\item GNR: Global Names Resolver
+\item TNRS: Taxonomic Name Resolution Service
+\end{itemize}
+
+\section{picante}
+\everypar={\hangindent=9mm}
+
+\bcode{comdist} Calculates inter-community mean pairwise distance
+
+\bcode{comdistnn}   Calculates inter-community mean nearest taxon distance
+
+\bcode{comdistnt}   Calculates inter-community mean nearest taxon distance
+
+\bcode{cor.table}   Table of correlations and P-values
+
+\bcode{matrix2sample}   Convert community data matrix to Phylocom sample
+
+\bcode{mnnd}    Mean nearest taxon distance
+
+\bcode{mntd}    Mean nearest taxon distance
+
+\bcode{mpd} Mean pairwise distance
+
+\bcode{phylosignal} Measure phylogenetic signal
+
+\bcode{phylosor}    Phylogenetic index of beta-diversity PhyloSor
+
+\bcode{randomizeMatrix} Null models for community data matrix randomization
+
+\bcode{raoD}    Rao's quadratic entropy
+
+\bcode{readsample}  Read Phylocom sample
+
+\bcode{sample2matrix}  Convert Phylocom sample to community data matrix
+
+\bcode{ses.mnnd}    Standardized effect size of MNTD
+
+\bcode{ses.mntd}    Standardized effect size of MNTD
+
+\bcode{ses.mpd} Standardized effect size of MPD
+
+\bcode{ses.pd}  Standardized effect size of PD
+
+\bcode{unifrac} Unweighted UniFrac distance between communities
+
+\bcode{evol.distinct}   Species' evolutionary distinctiveness
+
+
+\section{phytools}
+\everypar={\hangindent=9mm}
+
+\bcode{anc.Bayes}   Bayesian ancestral character estimation
+
+\bcode{anc.ML}  Ancestral character estimation using likelihood
+
+\bcode{anc.trend}   Ancestral character estimation with a trend
+
+\bcode{bmPlot} Simulates and visualizes discrete-time Brownian evolution on a phylogeny
+
+\bcode{gammatest} Gamma test of Pybus \& Harvey (2000)
+
+\bcode{genSeq} Simulate a DNA alignment on the tree under a model
+
+\bcode{ltt} Creates lineage-through-time plot (including extinct lineages)
+
+\bcode{ltt95} 绘制LTT plot
+
+\bcode{make.era.map} Create "era" map on a phylogenetic tree based on limits provided by the user.
+
+\bcode{multi.mantel} conducting a multiple matrix regression (partial Mantel test) and uses Mantel (1967) permutations to test the significance of the model and individual coefficients. It also returns the residual and predicted matrices.
+
+\bcode{pbtree} Simulate pure-birth or birth-death stochastic tree or trees
+
+\bcode{phylo.to.map} Plot tree with tips linked to geographic coordinates
+
+\bcode{phylosig} Compute phylogenetic signal with two methods: Blomberg's K or Lambda
+
+\bcode{phenogram} 将性状绘制到进化树上
+
+\bcode{rateshift} Find the temporal position of one or more rate shifts
+
+\bcode{read.newick}    Robust Newick style tree reader
+
+\bcode{cophylo} face to face plot. Creates a co-phylogenetic plot
+
+\bcode{plotSimmap} 将模拟的性状进化绘制到进化树上
+
+\section{phylolm}
+\everypar={\hangindent=9mm}
+
+\bcode{phylolm} Fits a phylogenetic linear regression model. The likelihood is calculated with an algorithm that is linear in the number of tips in the tree.
+
+\section{参考文献}
+\everypar={\hangindent=9mm}
+
+按照Tom Short (2004)的 R Reference Card (RRC)排版
+
+\textbf{Version 1.0 }\href{http://cran.cnr.berkeley.edu/doc/contrib/Short-refcard.pdf}{http://cran.cnr.berkeley.edu/doc/contrib/Short-refcard.pdf}
+
+\textbf{Version 2.0} \href{http://cran.cnr.berkeley.edu/doc/contrib/Baggott-refcard-v2.pdf}{http://cran.cnr.berkeley.edu/doc/contrib/Baggott-refcard-v2.pdf}
+
+
+\end{multicols}
+\end{CJK}  % 结束中文环境
+\end{document}
